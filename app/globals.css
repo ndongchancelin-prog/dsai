@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+:root {
+  --color-obsidienne: #0b0b0b;
+  --color-nuit: #15120c;
+  --color-or: #c9a24b;
+  --color-or-clair: #e4c87a;
+  --color-ocre: #b5651d;
+  --color-papyrus: #ede4d2;
+  --color-papyrus-doux: #b7ae99;
+  --color-ligne: rgba(201, 162, 75, 0.22);
+}
+
+@theme inline {
+  --color-obsidienne: var(--color-obsidienne);
+  --color-nuit: var(--color-nuit);
+  --color-or: var(--color-or);
+  --color-or-clair: var(--color-or-clair);
+  --color-ocre: var(--color-ocre);
+  --color-papyrus: var(--color-papyrus);
+  --color-papyrus-doux: var(--color-papyrus-doux);
+  --color-ligne: var(--color-ligne);
+
+  --font-titres: var(--font-cinzel);
+  --font-corps: var(--font-cormorant);
+  --font-labels: var(--font-jost);
+}
+
+body {
+  background: var(--color-obsidienne);
+  color: var(--color-papyrus);
+  font-family: var(--font-corps), serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-titres), serif;
+  letter-spacing: 0.02em;
+}
+
+.eyebrow {
+  font-family: var(--font-labels), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--color-or);
+}
+
+.radial-gold {
+  background: radial-gradient(
+    ellipse at top,
+    rgba(201, 162, 75, 0.12),
+    transparent 60%
+  );
+}
