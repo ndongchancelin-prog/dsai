@@ -1,0 +1,26 @@
+{
+  "name": "dsai",
+  "scripts": {
+    "start": "tsx index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ndongchancelin-prog/dsai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ndongchancelin-prog/dsai/issues"
+  },
+  "homepage": "https://github.com/ndongchancelin-prog/dsai#readme",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@higgsfield/client": "^0.2.6",
+    "dotenv": "^18.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
