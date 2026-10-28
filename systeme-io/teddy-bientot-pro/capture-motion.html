@@ -1,0 +1,331 @@
+<!--
+  Teddy Academy - Bientôt pro : calque d'animation de la page de capture.
+  À coller dans le bloc « HTML brut » déjà placé en haut de la colonne de gauche du hero.
+  Le script repère les éléments par leur texte (titre, bouton, liens du pied de page) :
+  ne change pas ces textes sans adapter les constantes ci-dessous.
+-->
+<style>
+  :root {
+    --tp-bg: #05070F;
+    --tp-alt: #0A1022;
+    --tp-navy: #0B1230;
+    --tp-indigo: #1B2A6B;
+    --tp-gold: #D4AF37;
+    --tp-gold-light: #F2D675;
+    --tp-text: #FFFFFF;
+    --tp-muted: #B8C0D9;
+    --tp-ease: cubic-bezier(.22, 1, .36, 1);
+  }
+  html, body { background: var(--tp-bg); overflow-x: hidden; }
+
+  /* Hero : lueur bleue douce et calques */
+  .tp-hero { position: relative; overflow: hidden; isolation: isolate;
+    background: radial-gradient(60% 70% at 78% 40%, rgba(27, 42, 107, .55), transparent 70%),
+                radial-gradient(40% 50% at 15% 10%, rgba(27, 42, 107, .25), transparent 70%), var(--tp-bg) !important; }
+  .tp-hero > * { position: relative; z-index: 1; }
+  .tp-particles { position: absolute; inset: 0; z-index: 0 !important; pointer-events: none; overflow: hidden; }
+  .tp-particles i { position: absolute; bottom: -10px; width: 3px; height: 3px; border-radius: 50%;
+    background: var(--tp-gold-light); opacity: 0; animation: tp-float linear infinite; }
+  @keyframes tp-float {
+    0% { transform: translate3d(0, 0, 0); opacity: 0; }
+    15% { opacity: var(--o, .35); }
+    85% { opacity: var(--o, .35); }
+    100% { transform: translate3d(var(--dx, 20px), -110vh, 0); opacity: 0; }
+  }
+
+  /* Titre : lettres qui montent une par une, puis reflet doré */
+  .tp-title .tp-l { display: inline-block; opacity: 0; transform: translateY(.45em);
+    animation: tp-rise .7s var(--tp-ease) forwards; animation-delay: calc(var(--i) * 45ms); }
+  .tp-title .tp-sp { display: inline-block; width: .3em; }
+  @keyframes tp-rise { to { opacity: 1; transform: none; } }
+  .tp-title.tp-sweep span { background: linear-gradient(100deg, var(--tp-gold) 0%, var(--tp-gold) 40%, #FFF3C4 50%, var(--tp-gold) 60%, var(--tp-gold) 100%);
+    background-size: 300% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text;
+    color: transparent !important; animation: tp-sweep 8s ease-in-out infinite; }
+  @keyframes tp-sweep { 0% { background-position: 100% 0; } 18%, 100% { background-position: 0% 0; } }
+
+  /* Apparitions */
+  .tp-fade-up { opacity: 0; transform: translateY(24px); transition: opacity .6s var(--tp-ease), transform .6s var(--tp-ease); }
+  .tp-fade-up.is-in { opacity: 1; transform: none; }
+  .tp-from-left { opacity: 0; transform: translateX(-40px); transition: opacity .7s var(--tp-ease), transform .7s var(--tp-ease); }
+  .tp-from-right { opacity: 0; transform: translateX(40px); transition: opacity .7s var(--tp-ease), transform .7s var(--tp-ease); }
+  .tp-from-left.is-in, .tp-from-right.is-in { opacity: 1; transform: none; }
+
+  /* Image du hero fondue dans la page, sans cadre */
+  .tp-hero-media { position: relative; }
+  .tp-hero-media::before { content: ""; position: absolute; left: 50%; top: 42%; width: 70%; aspect-ratio: 1;
+    transform: translate(-50%, -50%); border-radius: 50%; z-index: -1; pointer-events: none;
+    background: radial-gradient(circle, rgba(242, 214, 117, .35), rgba(212, 175, 55, .12) 45%, transparent 70%);
+    animation: tp-glow 6s ease-in-out infinite; }
+  @keyframes tp-glow { 0%, 100% { opacity: .55; transform: translate(-50%, -50%) scale(.95); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); } }
+  .tp-hero-media .tp-parallax { transition: transform .4s var(--tp-ease); will-change: transform; }
+  .tp-hero-media img { display: block; width: 100%; height: auto; border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
+    -webkit-mask-image: radial-gradient(ellipse 72% 78% at 50% 46%, #000 52%, transparent 100%);
+            mask-image: radial-gradient(ellipse 72% 78% at 50% 46%, #000 52%, transparent 100%);
+    opacity: 0; transform: translateY(16px) scale(.96);
+    transition: opacity 1s var(--tp-ease) .35s, transform 1.2s var(--tp-ease) .35s; }
+  .tp-hero-media.is-in img { opacity: 1; transform: none; }
+  .tp-hero-media.is-breathing img { animation: tp-breathe 8s ease-in-out infinite; transition: none; }
+  @keyframes tp-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+  /* Formulaire : verre sombre, anneau doré au focus */
+  .tp-form input { background: rgba(11, 18, 48, .72) !important; color: #fff !important; font-size: 18px !important;
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    transition: box-shadow .25s ease, border-color .25s ease; }
+  .tp-form input::placeholder { color: var(--tp-muted) !important; opacity: 1; }
+  .tp-form input:focus { outline: none !important; border-color: var(--tp-gold) !important;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, .35), 0 0 24px rgba(212, 175, 55, .25) !important; }
+
+  /* Boutons dorés : reflet toutes les 4 s, élévation au survol, pression au clic */
+  .tp-btn { position: relative !important; overflow: hidden !important; border: 0 !important;
+    background: linear-gradient(135deg, var(--tp-gold-light), var(--tp-gold) 55%, #B8912A) !important; color: var(--tp-bg) !important;
+    transition: transform .2s var(--tp-ease), box-shadow .25s ease !important; }
+  .tp-btn::after { content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent); transform: skewX(-20deg);
+    animation: tp-shine 4s ease-in-out infinite; }
+  @keyframes tp-shine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+  .tp-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(212, 175, 55, .35); }
+  .tp-btn:active { transform: translateY(1px) scale(.98); box-shadow: 0 4px 12px rgba(212, 175, 55, .25); }
+  .tp-btn:focus-visible { outline: 3px solid var(--tp-gold-light) !important; outline-offset: 3px; }
+  .tp-btn.is-loading { pointer-events: none; color: transparent !important; }
+  .tp-btn.is-loading::before { content: ""; position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+    border: 3px solid rgba(5, 7, 15, .25); border-top-color: var(--tp-bg); border-radius: 50%; animation: tp-spin .7s linear infinite; }
+  .tp-btn.is-done::before { content: "✓"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--tp-bg);
+    font-size: 26px; font-weight: 700; border: 0; animation: none; }
+  @keyframes tp-spin { to { transform: rotate(360deg); } }
+  .tp-form.is-sent { opacity: .35; transition: opacity .5s ease; }
+
+  /* Section Teddy : photos arrondies au fin liseré doré */
+  .tp-teddy img { border-radius: 18px !important; border: 1px solid rgba(212, 175, 55, .6) !important; }
+
+  /* Bandeau final : dégradé marine vers indigo et lumière dorée qui pulse */
+  .tp-final { position: relative; overflow: hidden; isolation: isolate;
+    background: linear-gradient(135deg, var(--tp-navy), var(--tp-indigo)) !important; text-align: center; }
+  .tp-final::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(520px, 90vw); aspect-ratio: 2 / 1;
+    transform: translate(-50%, -50%); border-radius: 50%; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(242, 214, 117, .32), transparent 70%); animation: tp-glow 5s ease-in-out infinite; }
+
+  /* Pied de page */
+  .tp-footer a { color: var(--tp-muted) !important; font-size: 14px; }
+  .tp-footer a:hover, .tp-footer a:focus-visible { color: var(--tp-gold-light) !important; }
+
+  @media (max-width: 767px) {
+    .tp-hero p, .tp-teddy p, .tp-final p { font-size: 18px !important; }
+  }
+
+  /* Mouvement réduit : seulement des fondus simples */
+  @media (prefers-reduced-motion: reduce) {
+    .tp-particles, .tp-hero-media::before, .tp-final::before, .tp-btn::after { display: none !important; }
+    .tp-title .tp-l { animation: none; opacity: 1; transform: none; }
+    .tp-title.tp-sweep span { animation: none; }
+    .tp-fade-up, .tp-from-left, .tp-from-right, .tp-hero-media img { transform: none !important; transition: opacity .4s ease !important; }
+    .tp-hero-media.is-breathing img { animation: none; }
+    .tp-btn:hover, .tp-btn:active { transform: none; }
+  }
+</style>
+<script>
+(function () {
+  var TITLE = 'BIENTÔT PRO';
+  var CTA_LABEL = 'Recevoir mon guide gratuit';
+  var FOOTER_LINK = 'Mentions légales';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function byText(selector, text) {
+    var nodes = document.querySelectorAll(selector);
+    for (var i = 0; i < nodes.length; i++) {
+      if (nodes[i].textContent.replace(/\s+/g, ' ').trim() === text) return nodes[i];
+    }
+    return null;
+  }
+  function commonAncestor(a, b) {
+    var seen = [];
+    for (var n = a; n; n = n.parentElement) seen.push(n);
+    for (var m = b; m; m = m.parentElement) if (seen.indexOf(m) !== -1) return m;
+    return document.body;
+  }
+  function childOf(root, el) {
+    for (var n = el; n && n.parentElement; n = n.parentElement) if (n.parentElement === root) return n;
+    return null;
+  }
+
+  function init() {
+    var h1 = byText('h1', TITLE);
+    var footerLink = byText('a', FOOTER_LINK);
+    if (!h1 || !footerLink) return;
+    var root = commonAncestor(h1, footerLink);
+    var sections = Array.prototype.filter.call(root.children, function (s) { return s.offsetHeight > 0; });
+    var hero = childOf(root, h1);
+    var footer = childOf(root, footerLink);
+    var form = hero.querySelector('form') || document.querySelector('form');
+    var heroImg = hero.querySelector('img');
+
+    hero.classList.add('tp-hero');
+    footer.classList.add('tp-footer');
+
+    // Titre lettre par lettre puis reflet doré
+    var titleSpan = h1.querySelector('span') || h1;
+    if (!reduced) {
+      var letters = titleSpan.textContent;
+      titleSpan.textContent = '';
+      Array.prototype.forEach.call(letters, function (ch, i) {
+        var s = document.createElement('span');
+        s.className = ch === ' ' ? 'tp-sp' : 'tp-l';
+        s.style.setProperty('--i', i);
+        s.textContent = ch === ' ' ? ' ' : ch;
+        s.setAttribute('aria-hidden', 'true');
+        titleSpan.appendChild(s);
+      });
+      titleSpan.setAttribute('aria-label', letters);
+      h1.classList.add('tp-title');
+      setTimeout(function () {
+        titleSpan.textContent = letters;
+        titleSpan.removeAttribute('aria-label');
+        h1.classList.add('tp-sweep');
+      }, letters.length * 45 + 900);
+    }
+
+    // Sous-titre, accroche puis formulaire : montée ligne par ligne
+    var heroBlocks = [];
+    for (var n = h1; n; n = n.nextElementSibling) if (n !== h1) heroBlocks.push(n);
+    if (!heroBlocks.length) {
+      var col = h1.parentElement;
+      while (col && col.children.length < 3) col = col.parentElement;
+      var started = false;
+      Array.prototype.forEach.call(col ? col.children : [], function (c) {
+        if (c.contains(h1)) { started = true; return; }
+        if (started) heroBlocks.push(c);
+      });
+    }
+    heroBlocks.forEach(function (b, i) {
+      b.classList.add('tp-fade-up');
+      setTimeout(function () { b.classList.add('is-in'); }, reduced ? 0 : 600 + 150 * (i + 1));
+    });
+
+    // Image du hero : fondu, léger zoom, respiration, lueur, parallaxe
+    if (heroImg) {
+      var media = heroImg.parentElement;
+      media.classList.add('tp-parallax');
+      var wrap = media.parentElement;
+      wrap.classList.add('tp-hero-media');
+      heroImg.setAttribute('fetchpriority', 'high');
+      // Mobile : titre et sous-titre, puis l'image, puis le formulaire
+      var formBlock = form && heroBlocks.filter(function (blk) { return blk.contains(form); })[0];
+      if (formBlock && window.matchMedia('(max-width: 767px)').matches) {
+        wrap.style.margin = '8px -16px 0';
+        formBlock.parentElement.insertBefore(wrap, formBlock);
+      }
+      requestAnimationFrame(function () { wrap.classList.add('is-in'); });
+      if (!reduced) {
+        setTimeout(function () { wrap.classList.add('is-breathing'); }, 1700);
+        var fine = window.matchMedia('(pointer: fine)').matches;
+        if (fine) {
+          hero.addEventListener('mousemove', function (e) {
+            var r = hero.getBoundingClientRect();
+            var x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+            media.style.transform = 'translate3d(' + (x * 10).toFixed(1) + 'px,' + (y * 8).toFixed(1) + 'px,0)';
+          });
+          hero.addEventListener('mouseleave', function () { media.style.transform = ''; });
+        } else {
+          window.addEventListener('scroll', function () {
+            var y = Math.min(window.scrollY, 600) * .04;
+            media.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0)';
+          }, { passive: true });
+        }
+      }
+    }
+
+    // Particules dorées (20 au maximum)
+    if (!reduced) {
+      var layer = document.createElement('div');
+      layer.className = 'tp-particles';
+      layer.setAttribute('aria-hidden', 'true');
+      for (var p = 0; p < 18; p++) {
+        var dot = document.createElement('i');
+        dot.style.left = (Math.random() * 100).toFixed(1) + '%';
+        dot.style.setProperty('--dx', (Math.random() * 60 - 30).toFixed(0) + 'px');
+        dot.style.setProperty('--o', (.15 + Math.random() * .3).toFixed(2));
+        dot.style.animationDuration = (14 + Math.random() * 14).toFixed(1) + 's';
+        dot.style.animationDelay = (-Math.random() * 20).toFixed(1) + 's';
+        layer.appendChild(dot);
+      }
+      hero.insertBefore(layer, hero.firstChild);
+    }
+
+    // Formulaire et bouton d'envoi
+    var submit = null;
+    if (form) {
+      form.classList.add('tp-form');
+      submit = form.querySelector('button[type="submit"], button, input[type="submit"]');
+      if (submit) submit.classList.add('tp-btn');
+      form.addEventListener('submit', function () {
+        if (!submit || (form.checkValidity && !form.checkValidity())) return;
+        submit.classList.add('is-loading');
+        setTimeout(function () {
+          submit.classList.remove('is-loading');
+          submit.classList.add('is-done');
+          form.classList.add('is-sent');
+        }, 900);
+        // Si la plateforme refuse l'envoi (champ invalide), on rend la main.
+        setTimeout(function () {
+          if (document.body.contains(submit)) {
+            submit.classList.remove('is-loading', 'is-done');
+            form.classList.remove('is-sent');
+          }
+        }, 8000);
+      }, true);
+    }
+
+    // Bouton du bandeau final : défile jusqu'au formulaire et met le focus sur le prénom
+    var buttons = document.querySelectorAll('a, button');
+    var cta = null;
+    for (var b = 0; b < buttons.length; b++) {
+      var el = buttons[b];
+      if (el !== submit && !(form && form.contains(el)) && el.textContent.replace(/\s+/g, ' ').trim().indexOf(CTA_LABEL) === 0) { cta = el; break; }
+    }
+    var finalSection = cta ? childOf(root, cta) : null;
+    if (cta) {
+      cta.classList.add('tp-btn');
+      cta.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var target = form || hero;
+        target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+        var first = form && form.querySelector('input:not([type="hidden"])');
+        if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, reduced ? 0 : 650);
+      }, true);
+    }
+    if (finalSection) finalSection.classList.add('tp-final');
+
+    // Section Teddy : celle qui suit le hero
+    var teddy = sections[sections.indexOf(hero) + 1];
+    if (teddy && teddy !== finalSection && teddy !== footer) {
+      teddy.classList.add('tp-teddy');
+      var photos = teddy.querySelectorAll('img');
+      Array.prototype.forEach.call(photos, function (img, i) {
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        if (!img.alt) img.alt = i === 0 ? 'Teddy Bryan en tenue d’entraînement' : 'Teddy Bryan, coach de football';
+        img.classList.add(i % 2 === 0 ? 'tp-from-left' : 'tp-from-right');
+      });
+    }
+
+    // Révélation au défilement : fondu montant de 24 px, 600 ms
+    var reveal = [];
+    sections.forEach(function (s) {
+      if (s === hero) return;
+      Array.prototype.forEach.call(s.children, function (c) { c.classList.add('tp-fade-up'); reveal.push(c); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.tp-from-left, .tp-from-right'), function (el) { reveal.push(el); });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+      }, { threshold: .15, rootMargin: '0px 0px -40px 0px' });
+      reveal.forEach(function (el) { io.observe(el); });
+    } else {
+      reveal.forEach(function (el) { el.classList.add('is-in'); });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

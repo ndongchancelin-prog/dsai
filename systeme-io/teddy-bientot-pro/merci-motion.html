@@ -1,0 +1,54 @@
+<!--
+  Teddy Academy - Bientôt pro : calque d'animation de la page de remerciement.
+  À coller dans le bloc « HTML brut » placé en haut de la page, au-dessus de l'image de couverture.
+-->
+<style>
+  html, body { background: #05070F; overflow-x: hidden; }
+  .tp-merci { position: relative; overflow: hidden; isolation: isolate;
+    background: radial-gradient(55% 60% at 50% 30%, rgba(27, 42, 107, .55), transparent 70%), #05070F !important; }
+  .tp-cover { position: relative; max-width: 300px; margin: 0 auto; }
+  .tp-cover::before { content: ""; position: absolute; inset: -20%; z-index: -1; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(242, 214, 117, .3), transparent 65%); animation: tp-glow 6s ease-in-out infinite; }
+  .tp-cover img { display: block; width: 100%; height: auto; border-radius: 14px;
+    box-shadow: 0 0 0 1px rgba(212, 175, 55, .55), 0 0 40px rgba(212, 175, 55, .25);
+    animation: tp-in .9s cubic-bezier(.22, 1, .36, 1) both, tp-floaty 6s ease-in-out .9s infinite; }
+  .tp-merci h1, .tp-merci p { animation: tp-in .7s cubic-bezier(.22, 1, .36, 1) both; }
+  .tp-merci h1 { animation-delay: .25s; }
+  .tp-merci p { animation-delay: .4s; font-size: 18px !important; }
+  @keyframes tp-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  @keyframes tp-floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes tp-glow { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  .tp-merci-footer a { color: #B8C0D9 !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .tp-cover img { animation: tp-fade .4s ease both; }
+    .tp-merci h1, .tp-merci p { animation: tp-fade .4s ease both; }
+    .tp-cover::before { animation: none; }
+    @keyframes tp-fade { from { opacity: 0; } to { opacity: 1; } }
+  }
+</style>
+<script>
+(function () {
+  function init() {
+    var h1 = document.querySelector('h1');
+    var links = document.querySelectorAll('a');
+    if (!h1 || !links.length) return;
+    var footerLink = links[links.length - 1];
+    // La section du titre est l'enfant du premier ancêtre commun au titre et au pied de page.
+    var seen = [];
+    for (var n = h1; n; n = n.parentElement) seen.push(n);
+    var root = footerLink;
+    while (root && seen.indexOf(root) === -1) root = root.parentElement;
+    var section = h1;
+    while (section.parentElement && section.parentElement !== root) section = section.parentElement;
+    section.classList.add('tp-merci');
+    footerLink.parentElement.classList.add('tp-merci-footer');
+    var img = section.querySelector('img');
+    if (img) {
+      img.parentElement.classList.add('tp-cover');
+      if (!img.alt) img.alt = 'Couverture du guide Bientôt pro de Teddy Bryan';
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
