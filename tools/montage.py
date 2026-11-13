@@ -24,7 +24,7 @@ def norm(w): return re.sub(r"[^\wà-ÿ-]", "", w.lower())
 SEQ = [  # (ancre, recul, plans de fond [clip, vitesse, zoom])
     (None, 0, [("r02_voiture_palmiers", 1.0, 1.0), ("r01_van", 0.55, 1.08), ("r03_ville_nuit", 0.6, 1.0)]),
     ("dabord", 0, [("r04_piscine_aerienne", 0.8, 1.0), ("r03_ville_nuit", 0.55, 1.12), ("r02_voiture_palmiers", 0.85, 1.15)]),
-    ("cent", 2, [("r07_motocross", 0.75, 1.0), ("r10_hydroglisseur", 0.7, 1.0), ("r09_sousmarin", 0.6, 1.0)]),
+    ("espèces", 3, [("r07_motocross", 0.75, 1.0), ("r10_hydroglisseur", 0.7, 1.0), ("r09_sousmarin", 0.6, 1.0)]),
     ("mer", 1, [("r11_sousmarin2", 0.3, 1.05), ("r09_sousmarin", 0.6, 1.12), ("r10_hydroglisseur", 0.65, 1.1)]),
     ("terre", 1, [("r14_course", 0.9, 1.0), ("r07_motocross", 0.8, 1.12), ("r02_voiture_palmiers", 0.9, 1.05)]),
     ("détente", 1, [("r12_minigolf", 0.3, 1.05), ("r04_piscine_aerienne", 0.8, 1.12), ("r13_muscu", 0.3, 1.0)]),
@@ -127,7 +127,7 @@ def pip_image(name):
     return fr
 
 PIPS = [("animaux", "zoo"), ("baleines", "baleine"), ("plongée", "plongee"), ("hydroglisseur", "hydroglisseur"),
-        ("courses", "course"), ("mini-golf", "minigolf"), ("billard", "billard"), ("muscu", "muscu"),
+        ("courses", "course"), ("mini", "minigolf"), ("billard", "billard"), ("muscu", "muscu"),
         ("base", "basejump")]
 pip_ev, cur = [], 0
 for key, img in PIPS:
